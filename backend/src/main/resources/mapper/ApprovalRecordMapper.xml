@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.leave.mapper.ApprovalRecordMapper">
+
+    <!--
+        TODO: 审批记录 SQL 映射
+        - 查询审批记录（按申请ID、审批人）
+        - 新增审批记录
+        - 查询某申请的审批历史
+    -->
+    <select id="selectByRequestId" resultType="com.example.leave.entity.ApprovalRecord">
+        SELECT id, request_id, approver_id, approver_name, action, reason,
+            approval_level, timestamp
+        FROM approval_record
+        WHERE request_id = #{requestId}
+        ORDER BY approval_level ASC, timestamp DESC
+    </select>
+
+    <!-- 新增审批记录 -->
+    <insert id="insert">
+        INSERT INTO approval_record
+        (id, request_id, approver_id, approver_name, action, reason, approval_level, timestamp)
+        VALUES
+            (#{id}, #{requestId}, #{approverId}, #{approverName}, #{action}, #{reason}, #{approvalLevel}, #{timestamp})
+    </insert>
+
+</mapper>

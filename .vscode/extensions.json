@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "Vue.volar",
+    "vscjava.vscode-java-pack",
+    "vscjava.vscode-spring-initializr",
+    "vscjava.vscode-spring-boot-dashboard"
+  ]
+}

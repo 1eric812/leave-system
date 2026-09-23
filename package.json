@@ -1,0 +1,26 @@
+{
+  "name": "-",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev:front": "vite",
+    "dev:back": "cd backend && \"C:\\Program Files\\Apache\\maven\\3.9.9\\bin\\mvn.cmd\" spring-boot:run",
+    "dev": "concurrently -n front,back -c cyan,green \"npm run dev:front\" \"npm run dev:back\"",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.3.2",
+    "axios": "^1.6.2",
+    "dayjs": "^1.11.10",
+    "element-plus": "^2.4.4",
+    "pinia": "^2.1.6",
+    "vue": "^3.5.34"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.6",
+    "concurrently": "^10.0.3",
+    "vite": "^8.0.12"
+  }
+}

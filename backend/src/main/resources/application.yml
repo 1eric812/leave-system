@@ -1,0 +1,48 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: leave-system
+
+  # 数据源（MySQL 本地数据库）
+  # 数据库账号密码通过环境变量注入，未设置时使用本地默认值 root/root
+  # 详见项目根目录 .env.example
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/leave_system?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+
+  # 启动时执行 schema.sql 建表
+  sql:
+    init:
+      mode: always
+
+  # H2 Web 控制台（MySQL 模式下关闭）
+  h2:
+    console:
+      enabled: false
+
+  # JPA
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # 热重载
+  devtools:
+    restart:
+      enabled: true
+
+# MyBatis-Plus 配置
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.example.leave.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
