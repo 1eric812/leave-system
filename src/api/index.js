@@ -1,7 +1,12 @@
 import axios from 'axios'
 
+// API 基础地址：
+//  - 本地开发：走 Vite 代理（/api -> http://localhost:8080）
+//  - 线上部署：通过 VITE_API_BASE_URL 注入后端公网地址
+const baseURL = import.meta.env.VITE_API_BASE_URL || '/api'
+
 const request = axios.create({
-  baseURL: '/api',
+  baseURL,
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 })

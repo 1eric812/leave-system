@@ -1,0 +1,54 @@
+# ============================================================
+# 请假审批流系统 - 一键启动（后端 + MySQL）
+# 用法：
+#   1. 复制本目录的 .env.example 为 .env 并填好密码
+#   2. docker compose up -d --build
+#   3. 前端访问 http://localhost:5173，后端接口 http://localhost:8080
+# ============================================================
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: leave-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-leave_system}
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+08:00
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      # 等 MySQL 真正可连接后再启动后端，避免后端启动时连库失败
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-root}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 30s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: leave-backend
+    restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      # 注意：容器内要用服务名 mysql，不是 localhost
+      DB_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-leave_system}?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai&createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false
+      DB_USERNAME: root
+      DB_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      SERVER_PORT: 8080
+      TZ: Asia/Shanghai
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+
+volumes:
+  mysql-data:
